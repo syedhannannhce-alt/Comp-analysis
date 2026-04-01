@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Competitor Analysis - AutoNgage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    
+    <style>
+        /* Extreme Dark Theme for Perfect Contrast */
+        :root {
+            --color-bg: #030106;
+            --color-purple-dark: #390099;
+            --color-purple-light: #6F3DF9;
+            --color-orange: #FF4D00;
+            --color-red-orange: #FE2900;
+            --color-lilac: #E3D3FF;
+            --color-white: #FFFFFF;
+        }
+        
+        html, body {
+            background-color: var(--color-bg);
+            font-family: 'Lato', sans-serif;
+            color: var(--color-white) !important;
+            overflow: hidden;
+        }
+
+        /* Subtle Background Glow */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(160px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.2; 
+            animation: float 20s infinite alternate linear;
+        }
+        .orb-1 { top: -20%; left: -10%; width: 800px; height: 800px; background: var(--color-purple-dark); }
+        .orb-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: var(--color-orange); opacity: 0.15; }
+        .orb-3 { bottom: 30%; left: 30%; width: 600px; height: 600px; background: var(--color-purple-light); opacity: 0.15; }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-50px) scale(1.1); }
+            100% { transform: translateY(50px) scale(0.9); }
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.08; 
+            z-index: 1000;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/200/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+        
+        .reveal { z-index: 10; color: #FFFFFF !important; }
+
+        /* Typography */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            text-transform: none;
+            font-weight: 800;
+            margin: 0;
+            color: #FFFFFF;
+        }
+        
+        .reveal p {
+            font-size: 0.95em;
+            line-height: 1.6;
+            text-align: left;
+            margin-top: 10px;
+            color: #E8E8E8 !important;
+        }
+        
+        .brand-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 0.6em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        /* Hero / Title Card */
+        .hero-card {
+            background: linear-gradient(135deg, rgba(20, 10, 30, 0.9) 0%, rgba(5, 5, 10, 0.95) 100%);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border: 1px solid rgba(111, 61, 249, 0.3);
+            border-top: 1px solid rgba(255, 77, 0, 0.4);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 40px rgba(57, 0, 153, 0.2);
+            border-radius: 30px;
+            padding: 70px 50px;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.8em !important;
+            background: linear-gradient(to right, #FFFFFF, var(--color-lilac));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            margin-bottom: 25px !important;
+            text-shadow: none !important;
+        }
+
+        .hero-prompt-box {
+            background: rgba(255, 77, 0, 0.08);
+            border-left: 4px solid var(--color-orange);
+            padding: 22px 35px;
+            border-radius: 0 12px 12px 0;
+            margin: 35px auto;
+            text-align: left;
+        }
+
+        /* Slide Glasscard */
+        .slide-glasscard {
+            background: rgba(14, 12, 18, 0.92);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 28px;
+            padding: 40px 55px; 
+            box-shadow: 0 40px 100px -10px rgba(0, 0, 0, 1);
+            width: 100%;
+            max-width: 1350px;
+            margin: 0 auto;
+            text-align: left;
+            box-sizing: border-box;
+        }
+        
+        .flex-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 50px;
+            height: 100%;
+        }
+        
+        .col-left { width: 55%; }
+        .col-right {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .company-name {
+            font-size: 3.2em !important;
+            color: #FFFFFF !important;
+            margin-bottom: 25px !important;
+            letter-spacing: -0.02em;
+        }
+
+        .claim-subtext {
+            font-family: 'Bricolage Grotesque'; 
+            color: var(--color-purple-light) !important; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            font-size: 0.8em; 
+            margin-bottom: 5px !important;
+        }
+        .claim-text {
+            color: #FFFFFF !important; 
+            font-weight: 800; 
+            font-size: 1.4em; 
+            margin-top: 0 !important;
+            margin-bottom: 15px !important;
+        }
+
+        /* Simple Bullet Points List */
+        .usp-list {
+            margin-top: 15px;
+            padding-left: 20px;
+            color: #FFFFFF;
+        }
+        .usp-list li {
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            color: #E8E8E8;
+        }
+
+        /* Links & Pills */
+        .link-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            border-radius: 22px;
+            font-size: 0.72em;
+            font-weight: 700;
+            text-decoration: none !important;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            transition: all 0.3s ease;
+        }
+        
+        .pill-web { background: rgba(255, 255, 255, 0.2); color: #FFFFFF !important; border: 1px solid rgba(255, 255, 255, 0.4); }
+        .pill-blog { background: rgba(111, 61, 249, 0.3); color: #FFFFFF !important; border: 1px solid rgba(111, 61, 249, 0.6); }
+        .pill-social { background: rgba(255, 77, 0, 0.2); color: #FFFFFF !important; border: 1px solid rgba(255, 77, 0, 0.5); }
+        .pill-media { background: rgba(220, 20, 60, 0.3); color: #FFFFFF !important; border: 1px solid rgba(220, 20, 60, 0.6); }
+        .pill:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.5); filter: brightness(1.2); }
+
+        /* LLM Analysis Box */
+        .llm-box {
+            background: linear-gradient(135deg, rgba(57, 0, 153, 0.4) 0%, rgba(14, 14, 14, 0.8) 100%);
+            border: 1px solid var(--color-purple-light);
+            border-radius: 16px;
+            padding: 22px;
+            margin-top: 25px;
+        }
+        
+        .llm-header {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 1.1em;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .llm-stats {
+            font-weight: 800;
+            color: var(--color-orange);
+            font-size: 1em;
+            margin-bottom: 10px !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Right Column Boxes */
+        .info-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 22px 28px;
+            border-radius: 16px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.4);
+        }
+        
+        .info-box.accent {
+            background: linear-gradient(145deg, rgba(255, 77, 0, 0.18) 0%, rgba(57, 0, 153, 0.2) 100%);
+            border: 1px solid rgba(255, 77, 0, 0.5);
+            border-left: 6px solid var(--color-orange);
+        }
+
+        .info-box-label {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.8) !important;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .info-box.accent .info-box-label { color: var(--color-orange) !important; opacity: 1; }
+
+        .info-box-val {
+            font-size: 1em;
+            color: #FFFFFF !important;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        
+        .stat-hq-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 1.05em;
+        }
+
+        .social-link-item {
+            display: block;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #FFFFFF !important;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .social-link-item:hover {
+            background: rgba(255,77,0,0.25);
+            border-color: var(--color-orange);
+        }
+
+        .reveal .controls, .reveal .progress { color: var(--color-orange) !important; }
+        .reveal .progress span { background-color: var(--color-purple-light) !important; }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Redesigned Title Slide -->
+            <section center>
+                <div class="hero-card">
+                    <div class="brand-badge">autoNgage by DaveAi</div>
+                    <h1 class="hero-title">Competitor Analysis<br>& LLM Ranks</h1>
+                    <p style="text-align: center; font-size: 1.25em; color: #FFFFFF !important; margin: 15px auto; line-height:1.5;">
+                        A structural deep-dive into Voice AI companies successfully ranking across major generative models for Dealership workflows.
+                    </p>
+                    
+                    <div class="hero-prompt-box">
+                        <p style="font-size: 0.75em; font-family:'Bricolage Grotesque'; letter-spacing:1.5px; text-transform:uppercase; color:var(--color-orange) !important; margin:0 0 5px 0; font-weight:700;">USER PROMPT BENCHMARK</p>
+                        <p style="font-size: 1.05em; margin:0; color:#FFFFFF !important; font-style:italic;">
+                            "I have a car dealership I need help with calling, I need help with AI voice calling customers can you suggest me some companies that can help me with that."
+                        </p>
+                    </div>
+
+                    <p style="margin-top: 40px; font-size: 0.7em; text-transform: uppercase; letter-spacing: 3px; font-weight:700; color:var(--color-purple-light) !important; text-align: center;">
+                        Press Right Arrow to Begin
+                    </p>
+                </div>
+            </section>
+
+            <!-- 1. Numa -->
+            <section>
+                <div class="slide-glasscard">
+                    <div class="flex-layout">
+                        <div class="col-left">
+                            <h2 class="company-name">Numa</h2>
+                            <div class="link-group">
+                                <a href="https://www.numa.com/" target="_blank" class="pill pill-web">Website</a>
+                                <a href="https://www.linkedin.com/company/numahq/" target="_blank" class="pill pill-social">LinkedIn</a>
+                            </div>
+                            
+                            <p class="claim-subtext">Core Claim</p>
+                            <p class="claim-text">"AI for Automotive Dealerships"</p>
+                            
+                            <ul class="usp-list">
+                                <li>Uses a "Smart Inbox" to combine text messages and voice calls in one place.</li>
+                                <li>Automatically spots angry customers on the phone so managers can jump in and help.</li>
+                                <li>Shows live scores of how happy your customers are in real-time.</li>
+                            </ul>
+
+                            <div class="llm-box">
+                                <div class="llm-header">🤖 LLM Ranking Analysis</div>
+                                <p class="llm-stats">Claude: #1 | Perplexity: #6</p>
+                                <p style="font-size: 0.9em; margin:0; color:#FFFFFF !important;"><strong>Reasoning:</strong> Ranked highly due to absolute domain dominance. Numa explicitly states "AI for Automotive Dealerships." The LLMs matched the user's "car dealership" context directly to Numa's exact targeted SEO keywords.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-right">
+                            <div class="info-box">
+                                <div class="info-box-label">Focus & Reach</div>
+                                <div class="info-box-val stat-hq-group">
+                                    <div><strong style="color:var(--color-purple-light);">HQ:</strong> California, USA</div>
+                                    <div><strong style="color:var(--color-purple-light);">Clients:</strong> USA, Canada (1,200+ Dealers)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box accent">
+                                <div class="info-box-label">🔥 Social & Content Strategy</div>
+                                <div class="info-box-val" style="font-size: 0.95em;">
+                                    Relies massively on live events (NADA) over daily blogging. Numa leans heavily into Instagram/YouTube video testimonials from powerful Dealer Principals.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Mia -->
+            <section>
+                <div class="slide-glasscard">
+                    <div class="flex-layout">
+                        <div class="col-left">
+                            <h2 class="company-name">Mia <span style="font-size:0.5em; opacity:0.6; font-weight:400;">(Mia Labs)</span></h2>
+                            <div class="link-group">
+                                <a href="https://www.mia.inc/" target="_blank" class="pill pill-web">Website</a>
+                                <a href="https://www.linkedin.com/company/mia-labs/" target="_blank" class="pill pill-social">LinkedIn</a>
+                            </div>
+                            
+                            <p class="claim-subtext">Core Claim</p>
+                            <p class="claim-text">"Your 24/7 Automotive AI Phone Agent"</p>
+                            
+                            <ul class="usp-list">
+                                <li>Acts as a 24/7 robot phone agent that sounds exactly like a real human.</li>
+                                <li>Answers 100% of calls instantly so you never miss a customer or put them on hold.</li>
+                                <li>Connects directly to your dealership software to check inventory and book appointments.</li>
+                            </ul>
+
+                            <div class="llm-box">
+                                <div class="llm-header">🤖 LLM Ranking Analysis</div>
+                                <p class="llm-stats">Claude: #2</p>
+                                <p style="font-size: 0.9em; margin:0; color:#FFFFFF !important;"><strong>Reasoning:</strong> Heavily matched by Claude because of its specific branding. The customized automotive integrations and massive recent PR ($20M Series A restricted to auto AI) made it an undeniably strong semantic match for "AI calling."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-right">
+                            <div class="info-box">
+                                <div class="info-box-label">Focus & Reach</div>
+                                <div class="info-box-val stat-hq-group">
+                                    <div><strong style="color:var(--color-purple-light);">HQ:</strong> Texas, USA</div>
+                                    <div><strong style="color:var(--color-purple-light);">Clients:</strong> USA (350+ Dealerships)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box accent">
+                                <div class="info-box-label">🔥 Top Performing Posts</div>
+                                <div class="info-box-val" style="font-size: 0.85em; margin-bottom: 10px;">Massive recent LinkedIn virality pushed by their $20M Series A announcement.</div>
+                                <a href="https://www.linkedin.com/posts/mialabsinc_youre-wonderful-excellent-when-ai-is-activity-7434664430409424896-YUtJ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAECJLukBM2bRZCB6_69DfV5MUdRSNx8As8w" target="_blank" class="social-link-item">📺 Watch: LinkedIn Video Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. VoiceGenie -->
+            <section>
+                <div class="slide-glasscard">
+                    <div class="flex-layout">
+                        <div class="col-left">
+                            <h2 class="company-name">VoiceGenie</h2>
+                            <div class="link-group">
+                                <a href="https://voicegenie.ai/" target="_blank" class="pill pill-web">Website</a>
+                                <a href="https://www.linkedin.com/company/voicegenie-ai/" target="_blank" class="pill pill-social">LinkedIn</a>
+                            </div>
+                            
+                            <p class="claim-subtext">Core Claim</p>
+                            <p class="claim-text">"Conversational Voice AI for Sales Automation"</p>
+                            
+                            <ul class="usp-list">
+                                <li>Makes thousands of sales and support phone calls at the exact same time without crashing.</li>
+                                <li>Lets you build your own custom AI agent and choose exactly how it sounds.</li>
+                                <li>Connects easily to tools like Zapier and HubSpot to update your customer lists instantly.</li>
+                            </ul>
+
+                            <div class="llm-box">
+                                <div class="llm-header">🤖 LLM Ranking Analysis</div>
+                                <p class="llm-stats">Perplexity: #3</p>
+                                <p style="font-size: 0.9em; margin:0; color:#FFFFFF !important;"><strong>Reasoning:</strong> Perplexity relies on real-time search indexing. VoiceGenie ranks high due to aggressive SEO and broad capability claims. Its strong SERP footprint for "outbound AI calling software" allowed it to capture this query seamlessly.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-right">
+                            <div class="info-box">
+                                <div class="info-box-label">Focus & Reach</div>
+                                <div class="info-box-val stat-hq-group">
+                                    <div><strong style="color:var(--color-purple-light);">HQ:</strong> USA & India</div>
+                                    <div><strong style="color:var(--color-purple-light);">Clients:</strong> India, USA, UAE, UK</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box accent">
+                                <div class="info-box-label">🔥 Top Performing Posts</div>
+                                <div class="info-box-val" style="font-size: 0.85em; margin-bottom: 10px;">They perform excellently leveraging both visually engaging Reels and targeted B2B LinkedIn insights.</div>
+                                <a href="https://www.linkedin.com/posts/voicegenie_most-event-reminder-calls-end-the-same-way-activity-7437711503249539072-WmD2?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAECJLukBM2bRZCB6_69DfV5MUdRSNx8As8w" target="_blank" class="social-link-item">💼 View: LinkedIn Strategy Post</a>
+                                <a href="https://www.instagram.com/reel/DUsoN1YjwQs/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="social-link-item">📱 View: Instagram Reel Pitch</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. HuskyVoice.ai -->
+            <section>
+                <div class="slide-glasscard">
+                    <div class="flex-layout">
+                        <div class="col-left">
+                            <h2 class="company-name">HuskyVoice.ai</h2>
+                            <div class="link-group">
+                                <a href="https://www.huskyvoice.ai/" target="_blank" class="pill pill-web">Website</a>
+                                <a href="https://www.linkedin.com/company/huskyvoice/" target="_blank" class="pill pill-social">LinkedIn</a>
+                            </div>
+                            
+                            <p class="claim-subtext">Core Claim</p>
+                            <p class="claim-text">"Turn missed calls into confirmed appointments."</p>
+                            
+                            <ul class="usp-list">
+                                <li>Perfectly understands Indian accents, regional languages, and "Hinglish."</li>
+                                <li>Follows up on missed calls automatically to make sure they turn into booked meetings.</li>
+                                <li>Follows strict local telecom phone laws so your numbers never get blocked as spam.</li>
+                            </ul>
+
+                            <div class="llm-box">
+                                <div class="llm-header">🤖 LLM Ranking Analysis</div>
+                                <p class="llm-stats">ChatGPT: #3</p>
+                                <p style="font-size: 0.9em; margin:0; color:#FFFFFF !important;"><strong>Reasoning:</strong> ChatGPT favors heavy, educational content marketing. HuskyVoice frequently publishes B2B blogs discussing auto use cases (e.g., "When Car Dealerships Let AI Handle Calls"). This semantic match ranked them highly.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-right">
+                            <div class="info-box">
+                                <div class="info-box-label">Focus & Reach</div>
+                                <div class="info-box-val stat-hq-group">
+                                    <div><strong style="color:var(--color-purple-light);">HQ:</strong> Bangalore, India & USA</div>
+                                    <div><strong style="color:var(--color-purple-light);">Clients:</strong> India, USA, UAE (23+ Countries)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box accent">
+                                <div class="info-box-label">🔥 Top Performing Posts</div>
+                                <div class="info-box-val" style="font-size: 0.85em; margin-bottom: 10px;">Aggressive thought-leadership targeting structural B2B anxieties via viral titles and ad creatives.</div>
+                                <a href="https://www.linkedin.com/ad-library/detail/1021681526" target="_blank" class="social-link-item">💼 View: LinkedIn Ad Creative</a>
+                                <a href="https://youtube.com/shorts/HUJUgXA21-E?si=ex0PRO69zU0FJI94" target="_blank" class="social-link-item">📺 View: YouTube Short</a>
+                                <a href="https://www.linkedin.com/in/ingudam/" target="_blank" class="social-link-item">👤 View: Founder Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Troika Tech -->
+            <section>
+                <div class="slide-glasscard">
+                    <div class="flex-layout">
+                        <div class="col-left">
+                            <h2 class="company-name">Troika Tech</h2>
+                            <div class="link-group">
+                                <a href="https://troikatech.in/" target="_blank" class="pill pill-web">Website</a>
+                                <a href="https://www.linkedin.com/company/troika-tech/" target="_blank" class="pill pill-social">LinkedIn</a>
+                                <a href="https://www.instagram.com/troikatechindia/" target="_blank" class="pill pill-media">Instagram</a>
+                            </div>
+                            
+                            <p class="claim-subtext">Core Claim</p>
+                            <p class="claim-text">"Top AI Agents Company in Mumbai, India"</p>
+                            
+                            <ul class="usp-list">
+                                <li>Local experts in building custom AI agents for small and medium businesses.</li>
+                                <li>Specializes in making smart WhatsApp chatbots that talk directly to your customers.</li>
+                                <li>Focuses on easy, low-cost AI tools that any small business can start using quickly.</li>
+                            </ul>
+
+                            <div class="llm-box">
+                                <div class="llm-header">🤖 LLM Ranking Analysis</div>
+                                <p class="llm-stats">ChatGPT: #5</p>
+                                <p style="font-size: 0.9em; margin:0; color:#FFFFFF !important;"><strong>Reasoning:</strong> Ranked dynamically by ChatGPT due to their broad promotion of "AI Calling Agents" and regional press scaling. Their marketing exactly matches the generic "help with calling" prompt functionally, leading to a rank hit.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-right">
+                            <div class="info-box">
+                                <div class="info-box-label">Focus & Reach</div>
+                                <div class="info-box-val stat-hq-group">
+                                    <div><strong style="color:var(--color-purple-light);">HQ:</strong> Mumbai, India</div>
+                                    <div><strong style="color:var(--color-purple-light);">Clients:</strong> India, UAE</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box accent">
+                                <div class="info-box-label">🔥 Top Performing Posts</div>
+                                <div class="info-box-val" style="font-size: 0.85em; margin-bottom: 10px;">Known for extensive PR syndication, they heavily promote engaging visual platform demos natively.</div>
+                                <a href="https://www.instagram.com/reel/DWQ_YLeCBn4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="social-link-item">📱 View: Instagram Reel Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- 6. Lineshift.ai -->
+             <section>
+                <div class="slide-glasscard">
+                    <div class="flex-layout">
+                        <div class="col-left">
+                            <h2 class="company-name">Lineshift.ai</h2>
+                            <div class="link-group">
+                                <a href="https://www.lineshift.ai/" target="_blank" class="pill pill-web">Website</a>
+                                <a href="https://www.linkedin.com/company/lineshift-ai/" target="_blank" class="pill pill-social">LinkedIn</a>
+                            </div>
+                            
+                            <p class="claim-subtext">Core Claim</p>
+                            <p class="claim-text">"Conversational AI agents for car dealerships."</p>
+                            
+                            <ul class="usp-list">
+                                <li>Builds AI phone agents specifically meant for car dealership service centers.</li>
+                                <li>Speaks many languages perfectly (French, Spanish, Italian, German, English).</li>
+                                <li>Uses highly polite and empathetic robot voices to keep frustrated customers happy.</li>
+                            </ul>
+
+                            <div class="llm-box">
+                                <div class="llm-header">🤖 LLM Ranking Analysis</div>
+                                <p class="llm-stats">Gemini: #7</p>
+                                <p style="font-size: 0.9em; margin:0; color:#FFFFFF !important;"><strong>Reasoning:</strong> Ranked explicitly by Gemini because Lineshift claims to provide "Conversational AI agents for car dealerships" directly as their H1 pitch on their website. Gemini’s access to current web signals linked their homepage SEO perfectly with the prompt intent.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-right">
+                            <div class="info-box">
+                                <div class="info-box-label">Focus & Reach</div>
+                                <div class="info-box-val stat-hq-group">
+                                    <div><strong style="color:var(--color-purple-light);">HQ:</strong> Paris, France</div>
+                                    <div><strong style="color:var(--color-purple-light);">Clients:</strong> France, Spain, Germany, USA</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box accent" style="opacity: 0.9;">
+                                <div class="info-box-label">🔥 Marketing Strategy</div>
+                                <div class="info-box-val" style="font-size: 0.95em;">Lineshift prioritizes high-profile PR structurally over daily social media grind. Their most read content leveraged the <span class="strong-text">Takata Airbag Recall</span> crisis, showing AI stability in panic situations.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- 7. VoiceInfra -->
+             <section>
+                <div class="slide-glasscard">
+                    <div class="flex-layout">
+                        <div class="col-left">
+                            <h2 class="company-name">VoiceInfra</h2>
+                            <div class="link-group">
+                                <a href="https://voiceinfra.ai/" target="_blank" class="pill pill-web">Website</a>
+                                <a href="https://linkedin.com/company/voiceinfra" target="_blank" class="pill pill-social">LinkedIn</a>
+                                <a href="https://www.youtube.com/@voiceinfra" target="_blank" class="pill pill-media">YouTube</a>
+                            </div>
+                            
+                            <p class="claim-subtext">Core Claim</p>
+                            <p class="claim-text">"Conversational AI Voice Agents for Enterprise"</p>
+                            
+                            <ul class="usp-list">
+                                <li>Connects AI voices directly to big corporate phone networks in under 60 seconds.</li>
+                                <li>Super fast system meant for handling massive amounts of customer service calls without delay.</li>
+                                <li>Built specifically for large tech teams to lower their call center costs by over 70%.</li>
+                            </ul>
+
+                            <div class="llm-box">
+                                <div class="llm-header">🤖 LLM Ranking Analysis</div>
+                                <p class="llm-stats">ChatGPT: #4</p>
+                                <p style="font-size: 0.9em; margin:0; color:#FFFFFF !important;"><strong>Reasoning:</strong> Although highly enterprise-focused (rather than dealership specific), its infrastructural focus aggressively aligns with "help with AI voice calling customers." ChatGPT surfaced them due to their deep engineering content validating them as big CPaaS players.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-right">
+                            <div class="info-box">
+                                <div class="info-box-label">Focus & Reach</div>
+                                <div class="info-box-val stat-hq-group">
+                                    <div><strong style="color:var(--color-purple-light);">HQ:</strong> USA & India</div>
+                                    <div><strong style="color:var(--color-purple-light);">Clients:</strong> Global Enterprise Centers</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box accent" style="opacity: 0.9;">
+                                <div class="info-box-label">🔥 Marketing Strategy</div>
+                                <div class="info-box-val" style="font-size: 0.95em;">The brand's voice is distinctly engineering-focused. Their leading content features step-by-step guides like "Adding Voice AI to WhatsApp Business" and highly technical YouTube demos of no-code orchestrators.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- End Slide -->
+            <section center>
+                <div class="brand-badge">autoNgage by DaveAI</div>
+                <h2>End of Report</h2>
+                <p style="text-align: center; color: var(--color-purple-light) !important; font-size: 1.2em; margin-top: 15px;">Press 'Esc' for an overview.</p>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: false,
+            controls: true,
+            progress: true,
+            center: true,
+            width: "100%",
+            height: "100%",
+            margin: 0,
+            minScale: 1,
+            maxScale: 1,
+            transition: 'slide',
+            backgroundTransition: 'fade'
+        });
+    </script>
+</body>
+</html>
